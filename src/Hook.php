@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Marussia\Hook;
 
 use Marussia\DependencyInjection\Container;
-use Marussia\Hook\Contracts\HookInterface;
 
 class Hook
 {
@@ -18,18 +17,24 @@ class Hook
         $this->hookHandler = $hookHandler;
     }
     
-    public static function setHandlers(array $handlers) : self
+    public static function create() : self
     {
-        $this->handlers = $handlers;
+        $container = new Container;
+        return $container->instance(Hook::class);
     }
     
-    public function add(HookInterface $hook)
+    public function setHandlers(array $handlers) : void
+    {
+        $this->hookHandler->setHandlers($handlers);
+    }
+    
+    public function add($hook) : void
     {
         $this->hookHandler->add($hook);
     }
     
-    public function run()
+    public function run() : void
     {
-        $this->hookHandler->run($this->handlers);
+        $this->hookHandler->run();
     }
 }

@@ -4,34 +4,61 @@ declare(strict_types=1);
 
 namespace Marussia\EventBus;
 
-use Marussia\EventBus\Entities\Hook;
 use Marussia\DependencyInjection\Container;
+use Marussia\Hook\Contracts\HookHandlerInterface;
+use Marussia\Hook\Exceptions\HookMustBeObjectException;
+use Marussia\Hook\Exceptions\HandlerMustBeImplementOfHookHandlerInterfaceException;
+use Marussia\Hook\Exceptions\HandlerNotFoundForHookException;
 
 class HookHandler extends Container
 {
     private $queue;
+    
+    private $handlers;
 
-    public function __construct(\SplQueue $queue)
+    public function __construct()
     {
-        $this->queue = $queue;
+        $this->queue = new \SplQueue;
         $this->queue->setIteratorMode(\SplQueue::IT_MODE_DELETE);
     }
 
-    public function add(Hook $hook)
+    public function setHandlers(array $handlers) : void
+    {
+        $this->handlers = $handlers;
+    }
+    
+    public function add($hook) : void
     {
         $this->queue->enqueue($hook);
     }
     
-    public function run(array $handlers)
+    public function run() : void
     {
-        while (!$this->queue->isEmpty) {
-            $hook = $this->queue->dequeue();
+        foreach ($this->iterate() as $hook) {
+
+            if (!is_object($hook)) {
+                throw new HookMustBeObjectException(gettype($hook));
+            }
+        
             $hookClass = get_class($hook);
             
-            if (!array_key_exists($handlers)) {
+            if (!array_key_exists($hookClass, $this->handlers)) {
                 throw new HandlerNotFoundForHookException($hookClass);
             }
-            $this->instance($hookClass)->handle($hook);
+            
+            $handler = $this->instance($hookClass);
+            
+            if (!($handler instanceof HookHandlerInterface)) {
+                throw new HandlerMustBeImplementOfHookHandlerInterfaceException(get_class($handler));
+            }
+            $handler->handle($hook);
+        }
+    }
+    
+    private function iterate() : \Traversable
+    {
+        while(!$this->queue->isEmpty()) {
+            yield $this->queue->pop();
         }
     }
 }
