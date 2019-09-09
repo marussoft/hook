@@ -8,8 +8,6 @@ use Marussia\DependencyInjection\Container;
 
 class Hook
 {
-    private $handlers;
-    
     private $hookHandler;
 
     public function __construct(HookHandler $hookHandler)
