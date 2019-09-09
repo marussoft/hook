@@ -9,15 +9,29 @@ use Marussia\DependencyInjection\Container;
 
 class HookHandler extends Container
 {
-    private $config;
-    
-    public function __construct(ConfigProvider $config)
+    private $queue;
+
+    public function __construct(\SplQueue $queue)
     {
-        $this->config = $config;
+        $this->queue = $queue;
+        $this->queue->setIteratorMode(\SplQueue::IT_MODE_DELETE);
     }
 
-    public function handle(Hook $hook)
+    public function add(Hook $hook)
     {
+        $this->queue->enqueue($hook);
+    }
     
+    public function run(array $handlers)
+    {
+        while (!$this->queue->isEmpty) {
+            $hook = $this->queue->dequeue();
+            $hookClass = get_class($hook);
+            
+            if (!array_key_exists($handlers)) {
+                throw new HandlerNotFoundForHookException($hookClass);
+            }
+            $this->instance($hookClass)->handle($hook);
+        }
     }
 }
