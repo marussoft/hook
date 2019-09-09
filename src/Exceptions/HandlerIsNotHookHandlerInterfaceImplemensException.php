@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Marussia\ApplicationKernel\Exceptions;
+namespace Marussia\Hook\Exceptions;
 
-class HandlerMustBeImplementOfHookHandlerInterfaceException extends \Exception
+class HandlerIsNotHookHandlerInterfaceImplemensException extends \Exception
 {
     public function __construct(string $hookClass)
     {

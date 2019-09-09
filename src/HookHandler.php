@@ -49,7 +49,7 @@ class HookHandler extends Container
             $handler = $this->instance($hookClass);
             
             if (!($handler instanceof HookHandlerInterface)) {
-                throw new HandlerMustBeImplementOfHookHandlerInterfaceException(get_class($handler));
+                throw new HandlerIsNotHookHandlerInterfaceImplemensException(get_class($handler));
             }
             $handler->handle($hook);
         }

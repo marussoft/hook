@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Marussia\ApplicationKernel\Exceptions;
+namespace Marussia\Hook\Exceptions;
 
 class HandlerNotFoundForHookException extends \Exception
 {
