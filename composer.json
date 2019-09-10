@@ -1,0 +1,28 @@
+{
+    "name": "marussia/hook",
+    "type": "library",
+    "description": "Marussia hook implementation",
+    "license": "MIT",
+    "keywords": [
+        "hook"
+    ],
+    "authors": [
+        {
+            "name": "Mikhail Ilinsky",
+            "email": "mail@milinsky.ru"
+        }
+    ],
+    "support": {
+        "docs": "https://docs.marussia.org/hook/"
+    },
+    "require": {
+        "php": "^7.0",
+        "marussia/dependency-injection": "~1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Marussia\\Hook\\": "src/"
+        }
+    }
+} 
