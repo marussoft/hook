@@ -1,1 +1,1 @@
-# hook
+# Simple hook implementation
