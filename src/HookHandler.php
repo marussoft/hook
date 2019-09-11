@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Marussia\EventBus;
+namespace Marussia\Hook;
 
 use Marussia\DependencyInjection\Container;
 use Marussia\Hook\Contracts\HookHandlerInterface;
@@ -58,7 +58,7 @@ class HookHandler extends Container
     private function iterate() : \Traversable
     {
         while(!$this->queue->isEmpty()) {
-            yield $this->queue->pop();
+            yield $this->queue->dequeue();
         }
     }
 }
